@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Отзывы — админка</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Отзывы</h1>
+            <p>Всего: <b th:text="${reviews.size()}">0</b></p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <div class="admin-filters">
+                <a th:href="@{/admin/reviews/new}" class="btn btn-primary">+ Добавить отзыв</a>
+                <a th:href="@{/admin/services}" class="filter-btn">← К услугам</a>
+            </div>
+
+            <table class="orders-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Автор</th>
+                    <th>Инфо</th>
+                    <th>Оценка</th>
+                    <th>Текст</th>
+                    <th>Активен</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="r : ${reviews}">
+                    <td th:text="${r.id}">1</td>
+                    <td th:text="${r.authorName}">Анна</td>
+                    <td th:text="${r.authorInfo}">Липецк</td>
+                    <td th:text="${r.rating} + ' ★'">5 ★</td>
+                    <td th:text="${#strings.abbreviate(r.text, 50)}">Текст...</td>
+                    <td>
+                        <span class="status-badge"
+                              th:classappend="${r.active} ? 'status-DONE' : 'status-NEW'"
+                              th:text="${r.active} ? 'Да' : 'Нет'">Да</span>
+                    </td>
+                    <td class="actions">
+                        <a th:href="@{'/admin/reviews/' + ${r.id} + '/edit'}"
+                           class="btn" style="background:#eef5fb; color:#0077cc;">✎</a>
+
+                        <form th:action="@{'/admin/reviews/' + ${r.id} + '/toggle'}"
+                              method="post" style="display:inline;">
+                            <button type="submit" class="btn" style="background:#f1f5f8;">⇄</button>
+                        </form>
+
+                        <form th:action="@{'/admin/reviews/' + ${r.id} + '/delete'}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Удалить отзыв?');">
+                            <button type="submit" class="btn-delete">✕</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

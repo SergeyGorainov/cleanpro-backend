@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Заявки — админка</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Заявки с сайта</h1>
+            <p>
+                Всего: <b th:text="${orders.size()}">0</b> ·
+                Новых: <b th:text="${newCount}">0</b>
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <!-- Фильтр по статусу -->
+            <div class="admin-filters">
+                <a th:href="@{/admin}" class="filter-btn">← Дашборд</a>
+                <a th:href="@{/admin/orders}"
+                   th:classappend="${currentStatus == null} ? 'active'"
+                   class="filter-btn">Все</a>
+                <a th:href="@{/admin/orders(status='NEW')}"
+                   th:classappend="${currentStatus == 'NEW'} ? 'active'"
+                   class="filter-btn">Новые</a>
+                <a th:href="@{/admin/orders(status='IN_PROGRESS')}"
+                   th:classappend="${currentStatus == 'IN_PROGRESS'} ? 'active'"
+                   class="filter-btn">В работе</a>
+                <a th:href="@{/admin/orders(status='DONE')}"
+                   th:classappend="${currentStatus == 'DONE'} ? 'active'"
+                   class="filter-btn">Выполненные</a>
+            </div>
+
+            <!-- Пустой список -->
+            <div th:if="${orders.isEmpty()}" class="card">
+                <p>Заявок пока нет.</p>
+            </div>
+
+            <!-- Таблица заявок -->
+            <table th:unless="${orders.isEmpty()}" class="orders-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Дата</th>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Адрес</th>
+                    <th>Услуга</th>
+                    <th>Цена от</th>
+                    <th>Комментарий</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}">1</td>
+
+                    <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">—</td>
+
+                    <td th:text="${order.name}">Имя</td>
+
+                    <td class="phone-cell">
+                        <a th:href="'tel:' + ${order.phone}" th:text="${order.phone}">+7...</a>
+                    </td>
+
+                    <td th:text="${order.address} ?: '—'">—</td>
+
+                    <td th:text="${order.service != null ? order.service.title : '—'}">—</td>
+
+                    <td>
+        <span th:if="${order.service != null}"
+              th:text="'от ' + ${#numbers.formatInteger(order.service.priceFrom, 0, 'WHITESPACE')} + ' ₽'">—</span>
+                        <span th:if="${order.service == null}">—</span>
+                    </td>
+
+                    <td class="comment-cell-full">
+        <span th:if="${order.comment != null and !order.comment.isEmpty()}"
+              th:text="${order.comment}">—</span>
+                        <span th:if="${order.comment == null or order.comment.isEmpty()}">—</span>
+                    </td>
+
+                    <td>
+        <span class="status-badge"
+              th:classappend="'status-' + ${order.status}"
+              th:switch="${order.status}">
+            <th:block th:case="'NEW'">Новая</th:block>
+            <th:block th:case="'IN_PROGRESS'">В работе</th:block>
+            <th:block th:case="'DONE'">Выполнена</th:block>
+            <th:block th:case="*" th:text="${order.status}">—</th:block>
+        </span>
+                    </td>
+
+                    <td class="actions">
+                        <form th:action="@{'/admin/orders/' + ${order.id} + '/status'}"
+                              method="post" style="display:inline;">
+                            <select name="status" onchange="this.form.submit()">
+                                <option value="NEW" th:selected="${order.status == 'NEW'}">Новая</option>
+                                <option value="IN_PROGRESS" th:selected="${order.status == 'IN_PROGRESS'}">В работе</option>
+                                <option value="DONE" th:selected="${order.status == 'DONE'}">Выполнена</option>
+                            </select>
+                        </form>
+
+                        <form sec:authorize="hasRole('ADMIN')"
+                              th:action="@{'/admin/orders/' + ${order.id} + '/delete'}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Удалить заявку?');">
+                            <button type="submit" class="btn-delete" title="Удалить">✕</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+                </table>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

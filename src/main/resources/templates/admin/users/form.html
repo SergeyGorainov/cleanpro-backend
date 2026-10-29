@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Редактирование пользователя</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Редактирование пользователя</h1>
+            <p>ID: <span th:text="${editUserId}">1</span></p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <div th:if="${errorMessage}" class="error-msg" th:text="${errorMessage}"></div>
+
+            <form th:action="@{'/admin/users/' + ${editUserId} + '/edit'}"
+                  th:object="${userForm}"
+                  method="post"
+                  class="order-form">
+
+                <label>Имя</label>
+                <input type="text" th:field="*{firstName}" required>
+                <span class="field-error" th:if="${#fields.hasErrors('firstName')}"
+                      th:errors="*{firstName}">Ошибка</span>
+
+                <label>Фамилия</label>
+                <input type="text" th:field="*{lastName}" required>
+                <span class="field-error" th:if="${#fields.hasErrors('lastName')}"
+                      th:errors="*{lastName}">Ошибка</span>
+
+                <label>Email</label>
+                <input type="email" th:field="*{email}" required>
+                <span class="field-error" th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}">Ошибка</span>
+
+                <label>Роль</label>
+                <select th:field="*{role}" required>
+                    <option value="USER">Юзер — обычный клиент</option>
+                    <option value="EMPLOYEE">Сотрудник — обрабатывает заявки</option>
+                    <option value="ADMIN">Админ — полный доступ</option>
+                </select>
+
+                <div style="margin-top: 20px; display: flex; gap: 8px;">
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <a th:href="@{/admin/users}" class="btn"
+                       style="background:#F2EAE0; color:#8B5E3C;">Отмена</a>
+                </div>
+
+                <p style="margin-top: 12px; font-size: 0.85rem; color: #7A6A5A;">
+                    ⚠ Пароль в админке не редактируется. Пользователь меняет его сам через свой профиль.
+                </p>
+
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

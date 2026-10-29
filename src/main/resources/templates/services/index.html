@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Услуги клининга</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-header">
+        <div class="container">
+            <h1>Услуги CleanPro48</h1>
+            <p>Профессиональная уборка в Липецке и области</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div th:each="cat : ${categories}" style="margin-bottom: 40px;">
+                <h2 class="category-title" th:text="${cat.title}">Категория</h2>
+                <p class="category-description" th:if="${cat.description != null}"
+                   th:text="${cat.description}">Описание</p>
+
+                <div class="grid grid-3">
+                    <a th:each="s : ${cat.services}"
+                       th:if="${s.active}"
+                       th:href="@{'/services/' + ${s.slug}}"
+                       class="card service-card">
+                        <h3 th:text="${s.title}">Название</h3>
+                        <p th:text="${s.shortDescription}">Описание</p>
+                        <span class="price" th:text="'от ' + ${s.priceFrom} + ' ₽'">от 0 ₽</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

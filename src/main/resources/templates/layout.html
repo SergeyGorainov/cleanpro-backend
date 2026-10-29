@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title layout:title-pattern="$CONTENT_TITLE - CleanPro48">
+        CleanPro48 — клининг в Липецке
+    </title>
+    <meta name="description" content="Профессиональный клининг в Липецке. Уборка квартир и офисов.">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/nav :: nav}"></div>
+<div th:replace="~{fragments/admin-nav :: adminNav}"></div>
+<div th:replace="~{fragments/admin-nav :: employeeNav}"></div>
+
+<main layout:fragment="content">
+    <!-- Контент дочерних страниц -->
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

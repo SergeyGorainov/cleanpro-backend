@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Цены калькулятора — админка</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Цены калькулятора</h1>
+            <p>Изменения мгновенно применяются на сайте</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <div class="admin-filters">
+                <a th:href="@{/admin}" class="filter-btn">← Дашборд</a>
+                <a th:href="@{/}" class="filter-btn" target="_blank">Открыть сайт</a>
+            </div>
+
+            <form th:action="@{/admin/calculator/save}" method="post">
+                <table class="orders-table">
+                    <thead>
+                    <tr>
+                        <th style="width: 40%;">Параметр</th>
+                        <th style="width: 20%;">Код</th>
+                        <th style="width: 25%;">Значение</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${prices}">
+                        <td th:text="${p.title}">Название</td>
+                        <td><code th:text="${p.code}">code</code></td>
+                        <td>
+                            <input type="number"
+                                   th:name="'price_' + ${p.code}"
+                                   th:value="${p.value}"
+                                   step="0.01"
+                                   min="0"
+                                   class="order-form-input"
+                                   style="max-width: 150px; padding: 6px 10px;">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 24px;">
+                    <button type="submit" class="btn btn-primary btn-lg">Сохранить все</button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

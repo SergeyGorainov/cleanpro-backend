@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Пользователи — админка</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Пользователи</h1>
+            <p>
+                Всего: <b th:text="${users.size()}">0</b> ·
+                Админов: <b th:text="${adminsCount}">0</b> ·
+                Сотрудников: <b th:text="${employeesCount}">0</b> ·
+                Пользователей: <b th:text="${usersCount}">0</b>
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <!-- Сообщения -->
+            <div th:if="${successMessage}" class="success-msg" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="error-msg" th:text="${errorMessage}"></div>
+
+            <!-- Фильтры -->
+            <div class="admin-filters">
+                <a th:href="@{/admin}" class="filter-btn">← Дашборд</a>
+                <a th:href="@{/admin/users}"
+                   th:classappend="${currentRole == null} ? 'active'"
+                   class="filter-btn">Все</a>
+                <a th:href="@{/admin/users(role='ADMIN')}"
+                   th:classappend="${currentRole == 'ADMIN'} ? 'active'"
+                   class="filter-btn">Админы</a>
+                <a th:href="@{/admin/users(role='EMPLOYEE')}"
+                   th:classappend="${currentRole == 'EMPLOYEE'} ? 'active'"
+                   class="filter-btn">Сотрудники</a>
+                <a th:href="@{/admin/users(role='USER')}"
+                   th:classappend="${currentRole == 'USER'} ? 'active'"
+                   class="filter-btn">Пользователи</a>
+            </div>
+
+            <!-- Таблица -->
+            <div th:if="${users.isEmpty()}" class="card">
+                <p>Пользователей пока нет.</p>
+            </div>
+
+            <table th:unless="${users.isEmpty()}" class="orders-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Email</th>
+                    <th>Роль</th>
+                    <th>Дата регистрации</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td th:text="${u.id}">1</td>
+
+                    <td>
+                        <span th:text="${u.firstName}">Имя</span>
+                        <span th:if="${u.id == currentUserId}"
+                              class="user-you-badge">Вы</span>
+                    </td>
+
+                    <td th:text="${u.lastName}">Фамилия</td>
+
+                    <td>
+                        <a th:href="'mailto:' + ${u.email}" th:text="${u.email}">mail@mail.ru</a>
+                    </td>
+
+                    <td>
+    <span class="status-badge"
+          th:classappend="${u.role == 'ADMIN'} ? 'status-DONE' :
+                          (${u.role == 'EMPLOYEE'} ? 'status-IN_PROGRESS' : 'status-NEW')"
+          th:text="${T(ru.cleanpro.cleanprobackend.util.RoleNames).humanize(u.role)}">—</span>
+                    </td>
+
+                    <td>
+        <span th:if="${u.createdAt != null}"
+              th:text="${#temporals.format(u.createdAt, 'dd.MM.yyyy HH:mm')}">—</span>
+                        <span th:if="${u.createdAt == null}">—</span>
+                    </td>
+
+                    <td class="actions">
+                        <a th:href="@{'/admin/users/' + ${u.id} + '/edit'}"
+                           class="btn" title="Редактировать">✎</a>
+
+                        <form th:if="${u.id != currentUserId}"
+                              th:action="@{'/admin/users/' + ${u.id} + '/reset-password'}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Сбросить пароль? Покажется новый.');">
+                            <button type="submit" class="btn" title="Сбросить пароль">🔑</button>
+                        </form>
+
+                        <form th:if="${u.id != currentUserId}"
+                              th:action="@{'/admin/users/' + ${u.id} + '/toggle-role'}"
+                              method="post" style="display:inline;">
+                            <button type="submit" class="btn"
+                                    th:title="${u.role == 'ADMIN'} ? 'Сделать пользователем' : 'Сделать админом'">⇄</button>
+                        </form>
+
+                        <form th:if="${u.id != currentUserId}"
+                              th:action="@{'/admin/users/' + ${u.id} + '/delete'}"
+                              method="post" style="display:inline;"
+                              onsubmit="return confirm('Удалить пользователя?');">
+                            <button type="submit" class="btn-delete" title="Удалить">✕</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

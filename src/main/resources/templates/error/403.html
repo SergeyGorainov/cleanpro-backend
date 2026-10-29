@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Страница не найдена</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>404 — Страница не найдена</h1>
+            <p>Похоже, такой страницы у нас нет или её переместили</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container" style="text-align: center; padding: 20px 0;">
+
+            <p style="font-size: 1.1rem; color: #7A6A5A; margin-bottom: 24px;">
+                Возможно, вы ошиблись в адресе или страница была удалена.
+            </p>
+
+            <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a th:href="@{/}" class="btn btn-primary btn-lg">На главную</a>
+                <a th:href="@{/services}" class="btn btn-lg"
+                   style="background:#F2EAE0; color:#8B5E3C;">Все услуги</a>
+                <a th:href="@{/contacts}" class="btn btn-lg"
+                   style="background:#F2EAE0; color:#8B5E3C;">Контакты</a>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

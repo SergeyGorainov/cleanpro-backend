@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${service.title} + ' в Липецке'">Услуга</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${service.title} + ' в Липецке'">Услуга</h1>
+            <p th:text="${service.shortDescription}">Описание</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>Что входит в услугу</h2>
+            <p th:text="${service.fullDescription}">Полное описание</p>
+
+            <h2>Цена</h2>
+            <p style="font-size: 1.4rem; color: #ff6b00; font-weight: 700;"
+               th:text="'от ' + ${service.priceFrom} + ' ₽'">от 0 ₽</p>
+
+            <a th:href="@{/#order}" class="btn btn-primary btn-lg">Заказать уборку</a>
+            <a th:href="@{/services}" class="btn" style="margin-left: 10px;">Все услуги</a>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Ошибка</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${status} ?: 'Ошибка'">Ошибка</h1>
+            <p th:text="${error} ?: 'Что-то пошло не так'">Что-то пошло не так</p>
+            <a th:href="@{/}" class="btn btn-primary">На главную</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>

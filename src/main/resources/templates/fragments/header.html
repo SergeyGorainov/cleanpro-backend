@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="site-header">
+    <div class="container header-inner">
+        <a th:href="@{/}" class="logo">CleanPro<span>48</span></a>
+
+        <div class="header-contacts">
+            <a href="tel:+79000000000" class="phone">+7 (900) 000-00-00</a>
+            <span class="work-time">Ежедневно 8:00–22:00</span>
+        </div>
+
+        <a th:href="@{/#order}" class="btn btn-primary">Заказать уборку</a>
+    </div>
+</header>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Регистрация</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-header">
+        <div class="container">
+            <h1>Регистрация</h1>
+            <p>Создайте аккаунт, чтобы видеть историю своих заявок</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form action="/register" th:object="${userForm}" method="post" class="order-form">
+
+                <div th:if="${registerError}" class="error-msg" th:text="${registerError}">
+                    Ошибка
+                </div>
+
+                <input type="text" th:field="*{firstName}" placeholder="Имя" required>
+                <span class="field-error" th:if="${#fields.hasErrors('firstName')}"
+                      th:errors="*{firstName}">Ошибка имени</span>
+
+                <input type="text" th:field="*{lastName}" placeholder="Фамилия" required>
+                <span class="field-error" th:if="${#fields.hasErrors('lastName')}"
+                      th:errors="*{lastName}">Ошибка фамилии</span>
+
+                <input type="email" th:field="*{email}" placeholder="Email" required>
+                <span class="field-error" th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}">Ошибка email</span>
+
+                <input type="password" th:field="*{password}" placeholder="Пароль" required>
+                <span class="field-error" th:if="${#fields.hasErrors('password')}"
+                      th:errors="*{password}">Ошибка пароля</span>
+
+                <input type="password" th:field="*{confirmPassword}"
+                       placeholder="Повторите пароль" required>
+                <span class="field-error" th:if="${#fields.hasErrors('confirmPassword')}"
+                      th:errors="*{confirmPassword}">Пароли не совпадают</span>
+
+                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+
+                <p class="form-footer">
+                    Уже есть аккаунт?
+                    <a th:href="@{/login}">Войти</a>
+                </p>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

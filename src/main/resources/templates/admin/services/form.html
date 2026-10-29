@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${isNew} ? 'Новая услуга' : 'Редактирование услуги'">Услуга</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${isNew} ? 'Новая услуга' : 'Редактирование услуги'">Услуга</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form th:action="@{/admin/services/save}" method="post" class="order-form">
+
+                <input type="hidden" th:field="${service.id}">
+
+                <label>Категория</label>
+                <select name="categoryId" required>
+                    <option value="">Выберите категорию</option>
+                    <option th:each="c : ${categories}"
+                            th:value="${c.id}"
+                            th:text="${c.title}"
+                            th:selected="${service.category != null and service.category.id == c.id}">
+                        Категория
+                    </option>
+                </select>
+
+                <label>Slug (латиница, без пробелов)</label>
+                <input type="text" th:field="${service.slug}" required>
+
+                <label>Название</label>
+                <input type="text" th:field="${service.title}" required>
+
+                <label>Короткое описание</label>
+                <input type="text" th:field="${service.shortDescription}">
+
+                <label>Полное описание</label>
+                <textarea th:field="${service.fullDescription}" rows="5"></textarea>
+
+                <label>Цена от (₽)</label>
+                <input type="number" th:field="${service.priceFrom}" step="100" required>
+
+                <label>Порядок отображения</label>
+                <input type="number" th:field="${service.sortOrder}" required>
+
+                <label>
+                    <input type="checkbox" th:field="${service.active}"> Активна
+                </label>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a th:href="@{/admin/services}" class="btn" style="margin-left:8px;">Отмена</a>
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

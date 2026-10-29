@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Вход в админку</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-header">
+        <div class="container">
+            <h1>Вход в админку</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form action="/login" method="post" class="order-form">
+
+                <div th:if="${param.error}" class="error-msg">
+                    Неверный email или пароль
+                </div>
+                <div th:if="${param.requireAuth}" class="info-msg">
+                    Чтобы оставить заявку, войдите или зарегистрируйтесь
+                </div>
+                <div th:if="${param.logout}" class="success-msg">
+                    Вы вышли из системы
+                </div>
+
+                <input type="email" name="username" placeholder="Email" required autofocus>
+                <input type="password" name="password" placeholder="Пароль" required>
+
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

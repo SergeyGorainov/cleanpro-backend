@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Личный кабинет</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Здравствуйте, <span th:text="${user.firstName}">гость</span>!</h1>
+            <p th:text="${user.email}">email@example.com</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <div class="profile-actions">
+                <a th:href="@{/#order}" class="btn btn-primary">Оставить новую заявку</a>
+                <a th:href="@{/profile/change-password}" class="btn btn-secondary">Сменить пароль</a>
+            </div>
+
+            <h2>Мои заявки</h2>
+
+            <div th:if="${successMessage}" class="success-msg" th:text="${successMessage}"></div>
+
+            <div th:if="${orders.isEmpty()}" class="card">
+                <p>У вас пока нет заявок.</p>
+            </div>
+
+            <table th:unless="${orders.isEmpty()}" class="orders-table">
+                <thead>
+                <tr>
+                    <th>№</th>
+                    <th>Дата</th>
+                    <th>Услуга</th>
+                    <th>Описание</th>
+                    <th>Адрес</th>
+                    <th>Цена от</th>
+                    <th>Комментарий</th>
+                    <th>Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td th:text="${order.id}">1</td>
+                    <td th:text="${#temporals.format(order.createdAt, 'dd.MM.yyyy HH:mm')}">—</td>
+                    <td th:text="${order.service != null ? order.service.title : '—'}">—</td>
+                    <td th:text="${order.service != null ? order.service.shortDescription : '—'}">—</td>
+                    <td th:text="${order.address} ?: '—'">—</td>
+                    <td>
+            <span th:if="${order.service != null}"
+                  th:text="'от ' + ${order.service.priceFrom} + ' ₽'">—</span>
+                        <span th:if="${order.service == null}">—</span>
+                    </td>
+                    <td class="comment-cell">
+            <span th:if="${order.comment != null and !order.comment.isEmpty()}"
+                  th:text="${order.comment}"
+                  th:title="${order.comment}">—</span>
+                        <span th:if="${order.comment == null or order.comment.isEmpty()}">—</span>
+                    </td>
+                    <td>
+                        <span class="status-badge"
+                              th:classappend="'status-' + ${order.status}"
+                              th:switch="${order.status}">
+                            <th:block th:case="'NEW'">Новая</th:block>
+                            <th:block th:case="'IN_PROGRESS'">В работе</th:block>
+                            <th:block th:case="'DONE'">Выполнена</th:block>
+                            <th:block th:case="*" th:text="${order.status}">—</th:block>
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

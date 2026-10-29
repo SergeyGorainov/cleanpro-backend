@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Контакты</title>
+    <meta name="description" content="Контакты клининговой компании CleanPro48 в Липецке. Телефон, email, адрес.">
+</head>
+<body>
+<div layout:fragment="content">
+    <section class="page-header">
+        <div class="container">
+            <h1>Контакты CleanPro48</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="contacts-grid">
+                <div class="card">
+                    <h3>Телефон</h3>
+                    <p><a href="tel:+79000000000">+7 (900) 000-00-00</a></p>
+                    <p>Ежедневно 8:00–22:00</p>
+                </div>
+                <div class="card">
+                    <h3>Email</h3>
+                    <p><a href="mailto:info@cleanpro48.ru">info@cleanpro48.ru</a></p>
+                </div>
+                <div class="card">
+                    <h3>Адрес</h3>
+                    <p>г. Липецк, ул. Примерная, 1</p>
+                </div>
+            </div>
+
+            <h2>Оставить заявку</h2>
+            <form th:action="@{/order}" method="post" class="order-form">
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                <input type="tel" name="phone" placeholder="Телефон" required>
+                <textarea name="address" placeholder="Комментарий"></textarea>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+        </div>
+    </section>
+</div>
+</body>
+</html>

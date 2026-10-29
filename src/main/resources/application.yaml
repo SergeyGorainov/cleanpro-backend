@@ -1,0 +1,75 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+
+  application:
+    name: cleanpro-backend
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/cleanpro_db}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:admin}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    defer-datasource-initialization: true
+
+  web:
+    resources:
+      static-locations: classpath:/static/, file:../frontend/
+
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+
+  mvc:
+    servlet:
+      encoding:
+        charset: UTF-8
+        force: true
+        force-request: true
+
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    mode: HTML
+    prefix: classpath:/templates/
+    suffix: .html
+
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    username: ${MAIL_USERNAME:no-reply@mail.ru}
+    password: ${MAIL_PASSWORD:change_me}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: smtp.mail.ru
+          starttls:
+            enable: false
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+cleanpro:
+  admin:
+    email: djstorm1@mail.ru
+
+logging:
+  level:
+    root: INFO
+    ru.cleanpro: DEBUG
+    org.hibernate.SQL: DEBUG

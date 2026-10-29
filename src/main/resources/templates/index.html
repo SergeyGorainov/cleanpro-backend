@@ -1,0 +1,398 @@
+﻿<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Клининг в Липецке</title>
+    <meta name="description"
+          content="Профессиональная уборка квартир и офисов в Липецке. Выезд в день заказа. Гарантия качества.">
+</head>
+<body>
+
+<div layout:fragment="content">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+            <h1>Профессиональный клининг в Липецке</h1>
+            <p class="hero-sub">Уборка квартир, офисов и коммерческих помещений. Выезд в день заказа.</p>
+            <a th:href="@{/#order}" class="btn btn-primary btn-lg">Заказать со скидкой 20%</a>
+        </div>
+    </section>
+
+    <!-- ПРЕИМУЩЕСТВА -->
+    <section class="advantages section-alt">
+        <div class="container">
+            <h2>Почему выбирают CleanPro48</h2>
+            <div class="grid grid-3">
+                <div class="card">
+                    <h3>Опыт более 5 лет</h3>
+                    <p>Более 2000 выполненных заказов в Липецке и области.</p>
+                </div>
+                <div class="card">
+                    <h3>Своё оборудование</h3>
+                    <p>Профессиональная химия и техника Karcher, Bosch.</p>
+                </div>
+                <div class="card">
+                    <h3>Гарантия качества</h3>
+                    <p>Если что-то не понравится — вернёмся и переделаем бесплатно.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- УСЛУГИ по категориям -->
+    <section class="services">
+        <div class="container">
+            <h2>Наши услуги</h2>
+
+            <div th:each="cat : ${categories}" style="margin-bottom: 40px;">
+                <h3 class="category-title" th:text="${cat.title}">Категория</h3>
+                <p class="category-description" th:if="${cat.description != null}"
+                   th:text="${cat.description}">Описание категории</p>
+
+                <div class="grid grid-3">
+                    <a th:each="s : ${cat.services}"
+                       th:if="${s.active}"
+                       th:href="@{'/services/' + ${s.slug}}"
+                       class="card service-card">
+                        <h3 th:text="${s.title}">Название</h3>
+                        <p th:text="${s.shortDescription}">Описание</p>
+                        <span class="price" th:text="'от ' + ${s.priceFrom} + ' ₽'">от 0 ₽</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАК РАБОТАЕМ -->
+    <section class="steps section-alt">
+        <div class="container">
+            <h2>Как мы работаем</h2>
+            <ol class="steps-list">
+                <li><strong>Заявка</strong> — оставляете заявку на сайте или по телефону.</li>
+                <li><strong>Расчёт</strong> — менеджер уточняет детали и называет цену.</li>
+                <li><strong>Уборка</strong> — клинеры приезжают в удобное время.</li>
+                <li><strong>Приёмка</strong> — проверяете результат и оплачиваете.</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР СТОИМОСТИ -->
+    <section class="calc" id="calc">
+        <div class="container">
+            <h2>Рассчитайте стоимость уборки</h2>
+            <p class="calc-subtitle">Предварительный расчёт за 30 секунд. Точную цену назовёт менеджер после уточнения деталей.</p>
+
+            <div class="calc-grid">
+
+                <!-- ЛЕВАЯ КОЛОНКА — параметры -->
+                <div class="calc-form">
+
+                    <label>Тип объекта</label>
+                    <div class="calc-options" id="calc-type">
+                        <button type="button" class="calc-option active" data-type="flat" data-mult="1">Квартира</button>
+                        <button type="button" class="calc-option" data-type="house" data-mult="1.3">Дом</button>
+                        <button type="button" class="calc-option" data-type="office" data-mult="1.1">Офис</button>
+                    </div>
+
+                    <label>Тип уборки</label>
+                    <div class="calc-options" id="calc-service">
+                        <button type="button" class="calc-option" data-service="regular" data-base="2500">Регулярная</button>
+                        <button type="button" class="calc-option active" data-service="general" data-base="4500">Генеральная</button>
+                        <button type="button" class="calc-option" data-service="renovation" data-base="7000">После ремонта</button>
+                    </div>
+
+                    <label>Количество комнат</label>
+                    <div class="calc-options" id="calc-rooms">
+                        <button type="button" class="calc-option" data-rooms="1" data-add="0">1</button>
+                        <button type="button" class="calc-option active" data-rooms="2" data-add="1500">2</button>
+                        <button type="button" class="calc-option" data-rooms="3" data-add="3000">3</button>
+                        <button type="button" class="calc-option" data-rooms="4" data-add="4500">4</button>
+                        <button type="button" class="calc-option" data-rooms="5" data-add="6000">5+</button>
+                    </div>
+
+                    <label>Площадь (м²)</label>
+                    <div class="calc-area-wrap">
+                        <input type="number"
+                               id="calc-area"
+                               class="calc-area-input"
+                               min="10"
+                               max="500"
+                               step="1"
+                               value="50"
+                               placeholder="Например, 50">
+                        <span class="calc-area-unit">м²</span>
+                    </div>
+                    <div class="calc-area-hint">
+                        <span id="calc-area-hint-text">~ 4 000 ₽ за уборку площади</span>
+                    </div>
+
+                    <label>Дополнительные услуги</label>
+                    <div class="calc-checkboxes">
+                        <label class="calc-checkbox">
+                            <input type="checkbox" id="calc-windows" data-price="2000">
+                            <span>Мытьё окон (+2 000 ₽)</span>
+                        </label>
+                        <label class="calc-checkbox">
+                            <input type="checkbox" id="calc-furniture" data-price="1500">
+                            <span>Химчистка мебели (+1 500 ₽)</span>
+                        </label>
+                        <label class="calc-checkbox">
+                            <input type="checkbox" id="calc-appliances" data-price="1000">
+                            <span>Мытьё техники (+1 000 ₽)</span>
+                        </label>
+                        <label class="calc-checkbox">
+                            <input type="checkbox" id="calc-balcony" data-price="800">
+                            <span>Уборка балкона (+800 ₽)</span>
+                        </label>
+                    </div>
+
+                </div>
+
+                <!-- ПРАВАЯ КОЛОНКА — результат -->
+                <div class="calc-result">
+                    <div class="calc-result-card">
+                        <p class="calc-result-label">Предварительная стоимость</p>
+                        <p class="calc-result-value"><span id="calc-total">6 000</span> ₽</p>
+                        <p class="calc-result-note">* Итоговая цена может отличаться — зависит от степени загрязнения и площади</p>
+
+                        <a th:href="@{/#order}" class="btn btn-primary btn-lg" id="calc-order-btn">
+                            Оставить заявку
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ о химчистке -->
+    <!-- FAQ из БД -->
+    <section class="faq section-alt" th:if="${!faqs.isEmpty()}">
+        <div class="container">
+            <h2>Частые вопросы о химчистке</h2>
+            <p class="faq-subtitle">Отвечаем на самые популярные вопросы наших клиентов</p>
+
+            <div class="faq-list">
+                <div th:each="f : ${faqs}" class="faq-item">
+                    <button class="faq-question" type="button">
+                        <span th:text="${f.question}">Вопрос</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p th:text="${f.answer}">Ответ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- РЕЗУЛЬТАТЫ РАБОТЫ (до/после) -->
+    <section class="results">
+        <div class="container">
+            <div class="results-header">
+                <h2>Взгляните на результаты нашей работы</h2>
+                <p class="results-subtitle">
+                    Мы используем профессиональные дорогостоящие средства,
+                    которые невыгодно приобретать для удаления нескольких пятен
+                </p>
+            </div>
+
+            <!-- Сетка с результатами -->
+            <div class="results-grid" id="resultsGrid">
+
+                <!-- Пример 1 -->
+                <div class="result-card">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result1-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result1-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка дивана</p>
+                </div>
+
+                <!-- Пример 2 -->
+                <div class="result-card">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result2-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result2-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка кресла</p>
+                </div>
+
+                <!-- Пример 3 -->
+                <div class="result-card">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result3-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result3-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка ковра</p>
+                </div>
+
+                <!-- Пример 4 (скрыт по умолчанию) -->
+                <div class="result-card hidden-result">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result4-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result4-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка матраса</p>
+                </div>
+
+                <!-- Пример 5 (скрыт) -->
+                <div class="result-card hidden-result">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result5-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result5-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка штор</p>
+                </div>
+
+                <!-- Пример 6 (скрыт) -->
+                <div class="result-card hidden-result">
+                    <div class="ba-slider">
+                        <img th:src="@{/images/results/result6-before.jpg}"
+                             alt="До" class="ba-before">
+                        <div class="ba-after-wrap">
+                            <img th:src="@{/images/results/result6-after.jpg}"
+                                 alt="После" class="ba-after">
+                        </div>
+                        <div class="ba-handle">
+                            <span class="ba-handle-arrow">‹</span>
+                            <span class="ba-handle-arrow">›</span>
+                        </div>
+                    </div>
+                    <p class="result-caption">Химчистка стульев</p>
+                </div>
+
+            </div>
+
+            <!-- Кнопка «Ещё фото» -->
+            <div class="results-more">
+                <button type="button" class="btn btn-primary" id="showMoreResults">
+                    + Ещё 3 фото
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ОТЗЫВЫ из БД -->
+    <section class="reviews section-alt">
+        <div class="container">
+            <h2>Отзывы клиентов</h2>
+            <div class="grid grid-2" th:if="${!reviews.isEmpty()}">
+                <blockquote th:each="r : ${reviews}" class="card">
+                    <p th:text="'«' + ${r.text} + '»'">Отзыв</p>
+                    <cite>
+                        — <span th:text="${r.authorName}">Автор</span>
+                        <span th:if="${r.authorInfo != null}"
+                              th:text="', ' + ${r.authorInfo}">, Город</span>
+                    </cite>
+                </blockquote>
+            </div>
+            <div th:if="${reviews.isEmpty()}" class="card">
+                <p>Отзывов пока нет.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФОРМА ЗАЯВКИ -->
+    <section class="order" id="order">
+        <div class="container">
+            <h2>Оставить заявку</h2>
+            <p>Заполните форму — перезвоним в течение 15 минут.</p>
+
+            <form action="/order" method="post" class="order-form">
+
+                <!-- Баннер для гостя -->
+                <div sec:authorize="!isAuthenticated()" class="auth-required-msg">
+                    🔒 Чтобы оставить заявку, пожалуйста,
+                    <a th:href="@{/login}">войдите</a> или
+                    <a th:href="@{/register}">зарегистрируйтесь</a>
+                </div>
+
+                <input type="text" name="name" placeholder="Ваше имя"
+                       th:value="${currentUser != null ? currentUser.firstName + ' ' + currentUser.lastName : ''}"
+                       th:disabled="${currentUser == null}"
+                       required>
+
+                <input type="tel" name="phone" placeholder="Телефон"
+                       th:disabled="${currentUser == null}"
+                       required>
+
+                <input type="text" name="address" placeholder="Адрес (город, улица)"
+                       th:disabled="${currentUser == null}">
+
+                <!-- Список услуг из БД -->
+                <select name="service" th:disabled="${currentUser == null}" required>
+                    <option value="">Выберите услугу</option>
+                    <optgroup th:each="cat : ${categories}" th:label="${cat.title}">
+                        <option th:each="s : ${cat.services}"
+                                th:if="${s.active}"
+                                th:value="${s.slug}"
+                                th:text="${s.title}">Услуга</option>
+                    </optgroup>
+                </select>
+
+                <textarea name="comment" placeholder="Комментарий (необязательно)"
+                          th:disabled="${currentUser == null}"></textarea>
+
+                <button type="submit" class="btn btn-primary"
+                        th:disabled="${currentUser == null}"
+                        th:text="${currentUser != null ? 'Отправить заявку' : 'Войдите, чтобы отправить'}">
+                    Отправить заявку
+                </button>
+
+                <!-- Подсказка для гостя -->
+                <p sec:authorize="!isAuthenticated()" class="form-hint">
+                    💡 <a th:href="@{/login}">Войдите</a> или
+                    <a th:href="@{/register}">зарегистрируйтесь</a>, чтобы оставить заявку
+                </p>
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

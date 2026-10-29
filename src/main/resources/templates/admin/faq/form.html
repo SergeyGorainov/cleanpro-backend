@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${isNew} ? 'Новый вопрос' : 'Редактирование вопроса'">FAQ</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${isNew} ? 'Новый вопрос' : 'Редактирование вопроса'">FAQ</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form th:action="@{/admin/faq/save}" method="post" class="order-form">
+
+                <input type="hidden" th:field="${faq.id}">
+
+                <label>Категория (опционально)</label>
+                <input type="text" th:field="${faq.category}"
+                       placeholder="himchistka, cleaning, payment">
+
+                <label>Вопрос</label>
+                <input type="text" th:field="${faq.question}" required>
+
+                <label>Ответ</label>
+                <textarea th:field="${faq.answer}" rows="6" required></textarea>
+
+                <label>Порядок отображения (меньше — выше)</label>
+                <input type="number" th:field="${faq.sortOrder}" required>
+
+                <label>
+                    <input type="checkbox" th:field="${faq.active}"> Показывать на сайте
+                </label>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a th:href="@{/admin/faq}" class="btn" style="margin-left:8px;">Отмена</a>
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

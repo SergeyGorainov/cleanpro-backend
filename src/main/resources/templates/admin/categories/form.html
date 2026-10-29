@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${isNew} ? 'Новая категория' : 'Редактирование категории'">Категория</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${isNew} ? 'Новая категория' : 'Редактирование категории'">Категория</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form th:action="@{/admin/categories/save}" method="post" class="order-form">
+
+                <input type="hidden" th:field="${category.id}">
+
+                <label>Slug (латиница, без пробелов)</label>
+                <input type="text" th:field="${category.slug}" required>
+
+                <label>Название</label>
+                <input type="text" th:field="${category.title}" required>
+
+                <label>Описание</label>
+                <textarea th:field="${category.description}" rows="3"></textarea>
+
+                <label>Порядок отображения</label>
+                <input type="number" th:field="${category.sortOrder}" required>
+
+                <label>
+                    <input type="checkbox" th:field="${category.active}"> Активна
+                </label>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a th:href="@{/admin/categories}" class="btn" style="margin-left:8px;">Отмена</a>
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

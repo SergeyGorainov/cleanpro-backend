@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="'Поиск: ' + ${query}">Поиск</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Результаты поиска</h1>
+            <p th:if="${query != null and !query.isEmpty()}">
+                По запросу: <b th:text="${query}">—</b>
+                · найдено: <b th:text="${results.size()}">0</b>
+            </p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+
+            <div th:if="${query == null or query.isEmpty()}" class="card">
+                <p>Введите запрос в строку поиска.</p>
+            </div>
+
+            <div th:if="${query != null and !query.isEmpty() and results.isEmpty()}" class="card">
+                <p>По запросу «<b th:text="${query}">—</b>» ничего не найдено.</p>
+                <p style="margin-top: 12px;">
+                    Попробуйте изменить запрос или
+                    <a th:href="@{/services}">посмотреть все услуги</a>.
+                </p>
+            </div>
+
+            <div th:if="${!results.isEmpty()}" class="grid grid-3">
+                <a th:each="s : ${results}"
+                   th:href="@{'/services/' + ${s.slug}}"
+                   class="card service-card">
+                    <h3 th:text="${s.title}">Название</h3>
+                    <p th:text="${s.shortDescription}">Описание</p>
+                    <span class="price"
+                          th:text="'от ' + ${#numbers.formatInteger(s.priceFrom, 0, 'WHITESPACE')} + ' ₽'">—</span>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+</div>
+</body>
+</html>

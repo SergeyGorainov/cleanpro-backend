@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${isNew} ? 'Новый отзыв' : 'Редактирование отзыва'">Отзыв</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <section class="page-header">
+        <div class="container">
+            <h1 th:text="${isNew} ? 'Новый отзыв' : 'Редактирование отзыва'">Отзыв</h1>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <form th:action="@{/admin/reviews/save}" method="post" class="order-form">
+
+                <input type="hidden" th:field="${review.id}">
+
+                <label>Имя автора</label>
+                <input type="text" th:field="${review.authorName}" required>
+
+                <label>Город / компания</label>
+                <input type="text" th:field="${review.authorInfo}">
+
+                <label>Текст отзыва</label>
+                <textarea th:field="${review.text}" rows="5" required></textarea>
+
+                <label>Оценка (1–5)</label>
+                <input type="number" th:field="${review.rating}" min="1" max="5" required>
+
+                <label>
+                    <input type="checkbox" th:field="${review.active}"> Показывать на сайте
+                </label>
+
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <a th:href="@{/admin/reviews}" class="btn" style="margin-left:8px;">Отмена</a>
+            </form>
+        </div>
+    </section>
+
+</div>
+</body>
+</html>
